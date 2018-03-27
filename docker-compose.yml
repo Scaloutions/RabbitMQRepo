@@ -9,3 +9,12 @@ services:
       - "15672:15672"
       - "25672:25672"
       - "5672:5672"
+  rabbitmq-client:
+      build: .
+      ports:
+        - "8081:8081"
+      depends_on:
+        - rabbitmq
+      links:
+        - rabbitmq
+  

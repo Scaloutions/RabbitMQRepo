@@ -1,0 +1,10 @@
+[general]
+active = 0
+#   0: development
+#   1: docker
+#   2: production
+#   3: qa
+
+    [general.rabbitmq]
+    port = 5672
+    connection_type = "tcp"

@@ -1,0 +1,5 @@
+[docker]
+
+    [docker.rabbitmq]
+    host = "rabbitmq"
+    enabled = true

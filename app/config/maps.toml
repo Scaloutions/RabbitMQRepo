@@ -1,0 +1,15 @@
+[[env-map]]
+index = 0
+type = "development"
+
+[[env-map]]
+index = 1
+type = "docker"
+
+[[env-map]]
+index = 2
+type = "production"
+
+[[env-map]]
+index = 3
+type = "qa"
