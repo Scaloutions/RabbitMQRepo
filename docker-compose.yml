@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: 'bitnami/rabbitmq:latest'
+    ports:
+      - "4369:4369"
+      - "15672:15672"
+      - "25672:25672"
