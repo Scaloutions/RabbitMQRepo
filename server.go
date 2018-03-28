@@ -13,4 +13,7 @@ func main() {
 	channel := configService.GetRabbitmqChannel()
 	fmt.Println(channel)
 
+	queue := configService.GetRabbitmqQueue()
+	fmt.Println(queue)
+
 }

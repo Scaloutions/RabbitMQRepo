@@ -36,6 +36,35 @@ func (configService ConfigService) GetRabbitmqChannel() *amqp.Channel {
 	return channel
 }
 
+func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
+
+	channel := configService.GetRabbitmqChannel()
+	if channel == nil {
+		return nil // TODO: add error handling later
+	}
+
+	queue, err1 := channel.QueueDeclare(
+
+		"retaildash-scrapy", // name
+
+		false, // durable
+
+		false, // delete when unused
+
+		false, // exclusive
+
+		false, // no-wait (wait time for processing)
+
+		nil, // arguments
+
+	)
+	if err1 != nil {
+		return nil
+	}
+
+	return &queue
+}
+
 /*
 	Private methods
 */
