@@ -2,6 +2,7 @@ package controller
 
 import (
 	"../service"
+	"../util"
 )
 
 type (
@@ -13,6 +14,14 @@ type (
 func GetConfigController() *ConfigController {
 	return newConfigController()
 }
+
+func (configController ConfigController) GetUtilites() *util.Utilities {
+	return configController.configService.GetUtilities()
+}
+
+/*
+	Private methods
+*/
 
 func newConfigController() *ConfigController {
 	configService := service.GetConfigService()

@@ -20,6 +20,10 @@ func GetConfigService() *ConfigService {
 	return newConfigService()
 }
 
+func (configService ConfigService) GetUtilities() *util.Utilities {
+	return configService.u
+}
+
 func (configService ConfigService) GetRabbitmqChannel() *amqp.Channel {
 
 	conn := configService.conn

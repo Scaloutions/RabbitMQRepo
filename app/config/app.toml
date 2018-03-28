@@ -18,3 +18,5 @@ port = 8081
         no_wait = false # no-wait (wait time for processing)
 
 
+[api]
+api = "/api"
