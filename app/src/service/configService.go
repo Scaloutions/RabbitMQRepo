@@ -46,20 +46,14 @@ func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
 	queueConfig := configService.u.GetQueueConfig()
 
 	queue, err1 := channel.QueueDeclare(
-
 		queueConfig.Name,
-
-		queueConfig.Durable, // durable
-
-		queueConfig.AutoDelete, // delete when unused
-
-		queueConfig.Exclusive, // exclusive
-
-		queueConfig.NoWait, // no-wait (wait time for processing)
-
-		nil, // arguments
-
+		queueConfig.Durable,
+		queueConfig.AutoDelete,
+		queueConfig.Exclusive,
+		queueConfig.NoWait,
+		nil,
 	)
+
 	if err1 != nil {
 		return nil
 	}

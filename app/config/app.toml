@@ -12,9 +12,9 @@ port = 8081
 
         [general.rabbitmq.queue]
         name = "scaloutions"
-        durable = true
-        auto_delete = false
-        exclusive = false
-        no_wait = false
+        durable = true # durable
+        auto_delete = false # delete when unused
+        exclusive = false # exclusive
+        no_wait = false # no-wait (wait time for processing)
 
 
