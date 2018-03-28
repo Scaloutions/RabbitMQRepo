@@ -11,7 +11,8 @@ import (
 
 type (
 	ConfigService struct {
-		u *util.Utilities
+		u    *util.Utilities
+		conn *amqp.Connection
 	}
 )
 
@@ -19,30 +20,59 @@ func GetConfigService() *ConfigService {
 	return newConfigService()
 }
 
+func (configService ConfigService) GetRabbitmqChannel() *amqp.Channel {
+
+	conn := configService.conn
+	if conn == nil { // when Rabbitmq is disabled
+		return nil // TODO: add warning later
+	}
+
+	channel, err := configService.conn.Channel()
+
+	// TODO: add error handling later
+	if err != nil {
+		return nil
+	}
+	return channel
+}
+
+/*
+	Private methods
+*/
+
 func newConfigService() *ConfigService {
 	v := config.ReadInConfig()
 	u := util.NewUtilites(v)
-	return &ConfigService{u}
+	conn := getRabbitmqConn(u)
+	return &ConfigService{u, conn}
 }
 
-func (configService ConfigService) GetRabbitmqConn() *amqp.Connection {
+func getRabbitmqConn(u *util.Utilities) *amqp.Connection {
 
-	if !configService.u.IsRabbitmqConnEnabled() {
+	if !u.IsRabbitmqConnEnabled() {
 		//	TODO: add warning later
 		fmt.Println("Rabbitmq is not enabled for current environment")
 		return nil
 	}
 
-	host := configService.u.GetRabbitmqHost()
-	port := configService.u.GetRabbitmqPort()
-	connType := configService.u.GetRabbitmqConnType()
-	pass := configService.u.GetRabbitmqPass()
-	user := configService.u.GetRabbitmqUser()
+	host := u.GetRabbitmqHost()
+	port := u.GetRabbitmqPort()
+	connType := u.GetRabbitmqConnType()
+	pass := u.GetRabbitmqPass()
+	user := u.GetRabbitmqUser()
 
 	amqpURI := fmt.Sprintf("%s://%s:%s@%s:%d", connType, user, pass, host, port)
 
 	// TODO: add error handling later
-	conn := config.RabbitmqConnect(amqpURI)
+
+	c := make(chan *amqp.Connection)
+
+	go func() {
+		conn := config.RabbitmqConnect(amqpURI)
+		c <- conn
+	}()
+
+	conn := <-c
 
 	return conn
 }
