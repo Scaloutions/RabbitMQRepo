@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/viper"
+
+	"../data"
 )
 
 type (
@@ -75,6 +77,37 @@ func (u Utilities) IsRabbitmqConnEnabled() bool {
 	prefix := u.getActiveEnvPrefix()
 	enabledKey := fmt.Sprintf("%s.rabbitmq.enabled", prefix)
 	return u.GetBooleanConfigValue(enabledKey)
+}
+
+func (u Utilities) GetQueueName() string {
+	return u.GetStringConfigValue("general.rabbitmq.queue.name")
+}
+
+func (u Utilities) GetQueueDurable() bool {
+	return u.GetBooleanConfigValue("general.rabbitmq.queue.durable")
+}
+
+func (u Utilities) GetQueueAutoDelete() bool {
+	return u.GetBooleanConfigValue("general.rabbitmq.queue.auto_delete")
+}
+
+func (u Utilities) GetQueueExclusive() bool {
+	return u.GetBooleanConfigValue("general.rabbitmq.queue.exclusive")
+}
+
+func (u Utilities) GetQueueNoWait() bool {
+	return u.GetBooleanConfigValue("general.rabbitmq.queue.no_wait")
+}
+
+func (u Utilities) GetQueueConfig() *data.QueueConfig {
+
+	return &data.QueueConfig{
+		u.GetQueueName(),
+		u.GetQueueDurable(),
+		u.GetQueueAutoDelete(),
+		u.GetQueueExclusive(),
+		u.GetQueueNoWait(),
+	}
 }
 
 /*

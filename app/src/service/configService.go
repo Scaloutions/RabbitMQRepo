@@ -43,17 +43,19 @@ func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
 		return nil // TODO: add error handling later
 	}
 
+	queueConfig := configService.u.GetQueueConfig()
+
 	queue, err1 := channel.QueueDeclare(
 
-		"retaildash-scrapy", // name
+		queueConfig.Name,
 
-		false, // durable
+		queueConfig.Durable, // durable
 
-		false, // delete when unused
+		queueConfig.AutoDelete, // delete when unused
 
-		false, // exclusive
+		queueConfig.Exclusive, // exclusive
 
-		false, // no-wait (wait time for processing)
+		queueConfig.NoWait, // no-wait (wait time for processing)
 
 		nil, // arguments
 

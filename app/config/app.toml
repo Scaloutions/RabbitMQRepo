@@ -9,3 +9,12 @@ port = 8081
     [general.rabbitmq]
     port = 5672
     connection_type = "amqp"
+
+        [general.rabbitmq.queue]
+        name = "scaloutions"
+        durable = false
+        auto_delete = false
+        exclusive = false
+        no_wait = false
+
+
