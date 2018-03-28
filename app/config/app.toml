@@ -7,5 +7,5 @@ active = 0
 port = 8081
 
     [general.rabbitmq]
-    port = 5672
+    port = 15672
     connection_type = "tcp"

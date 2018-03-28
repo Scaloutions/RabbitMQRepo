@@ -1,9 +1,12 @@
 package config
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/spf13/viper"
+	"github.com/streadway/amqp"
 )
 
 func ReadInConfig() *viper.Viper {
@@ -26,6 +29,15 @@ func ReadInConfig() *viper.Viper {
 	readInConfigHelper(v, "maps")
 
 	return v
+}
+
+func RabbitmqConnect() {
+	time.Sleep(1 * time.Minute)
+	connection, err := amqp.Dial("amqp://user:pass@rabbitMq:5672/vhost")
+	if err != nil {
+		fmt.Errorf("Dial: %s", err)
+	}
+	fmt.Println("Connection: ", *connection)
 }
 
 /*

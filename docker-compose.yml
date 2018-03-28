@@ -1,20 +1,22 @@
 version: '3.4'
 
 services:
-  rabbitmq:
-    container_name: rabbitmq
-    image: 'bitnami/rabbitmq:latest'
+  rabbitMq:
+    container_name: rabbitMq
+    image: rabbitmq:3-management
     ports:
-      - "4369:4369"
-      - "15672:15672"
-      - "25672:25672"
       - "5672:5672"
+      - "5671:5671"
+    environment: 
+      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_VHOST: vhost
   rabbitmq-client:
       build: .
       ports:
         - "8081:8081"
       depends_on:
-        - rabbitmq
+        - rabbitMq
       links:
-        - rabbitmq
+        - rabbitMq
   
