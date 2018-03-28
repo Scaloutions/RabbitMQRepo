@@ -3,4 +3,6 @@ host = "8081"
 
     [production.rabbitmq]
     host = "rabbitmq"
+    pass = "guest"
+    user = "guest"
     enabled = true

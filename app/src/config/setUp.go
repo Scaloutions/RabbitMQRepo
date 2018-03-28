@@ -9,7 +9,17 @@ import (
 	"github.com/streadway/amqp"
 )
 
+const (
+	wait_time = 15000
+)
+
+var (
+	count = 0
+)
+
 func ReadInConfig() *viper.Viper {
+
+	// TODO: add error handling later, return err instead of constructing new one
 
 	v := viper.New()
 	v.AddConfigPath("./app/config")
@@ -31,13 +41,19 @@ func ReadInConfig() *viper.Viper {
 	return v
 }
 
-func RabbitmqConnect() {
-	time.Sleep(1 * time.Minute)
-	connection, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672")
+func RabbitmqConnect(amqpUri string) *amqp.Connection {
+
+	// TODO: add error handling later, return err instead of constructing new one
+
+	if count == 0 { // wait until Rabbitmq is ready
+		time.Sleep(wait_time * time.Millisecond)
+		count = 1
+	}
+	conn, err := amqp.Dial(amqpUri)
 	if err != nil {
 		fmt.Errorf("Dial: %s", err)
 	}
-	fmt.Println("Connection: ", *connection)
+	return conn
 }
 
 /*

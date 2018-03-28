@@ -1,5 +1,5 @@
 [general]
-active = 0
+active = 1
 #   0: development
 #   1: docker
 #   2: production
@@ -7,5 +7,5 @@ active = 0
 port = 8081
 
     [general.rabbitmq]
-    port = 15672
-    connection_type = "tcp"
+    port = 5672
+    connection_type = "amqp"

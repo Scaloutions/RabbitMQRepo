@@ -1,14 +1,13 @@
 package main
 
 import (
-	"./app/src/config"
+	"./app/src/service"
 )
 
 func main() {
 
-	// configService := service.GetConfigService()
-	// u := configService.GetUtilities()
-	// fmt.Println(u.GetStringConfigValue("general.rabbitmq.connection_type"))
+	configService := service.GetConfigService()
 
-	config.RabbitmqConnect()
+	// config.RabbitmqConnect("amqp://guest:guest@rabbitmq:5672")
+	configService.GetRabbitmqConn()
 }

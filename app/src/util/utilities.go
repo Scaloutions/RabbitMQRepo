@@ -45,6 +45,38 @@ func (u Utilities) GetActiveEnvHost() string {
 	return u.GetStringConfigValue(hostKey)
 }
 
+func (u Utilities) GetRabbitmqHost() string {
+	prefix := u.getActiveEnvPrefix()
+	hostKey := fmt.Sprintf("%s.rabbitmq.host", prefix)
+	return u.GetStringConfigValue(hostKey)
+}
+
+func (u Utilities) GetRabbitmqPort() int {
+	return u.GetIntConfigValue("general.rabbitmq.port")
+}
+
+func (u Utilities) GetRabbitmqConnType() string {
+	return u.GetStringConfigValue("general.rabbitmq.connection_type")
+}
+
+func (u Utilities) GetRabbitmqPass() string {
+	prefix := u.getActiveEnvPrefix()
+	passKey := fmt.Sprintf("%s.rabbitmq.pass", prefix)
+	return u.GetStringConfigValue(passKey)
+}
+
+func (u Utilities) GetRabbitmqUser() string {
+	prefix := u.getActiveEnvPrefix()
+	userKey := fmt.Sprintf("%s.rabbitmq.user", prefix)
+	return u.GetStringConfigValue(userKey)
+}
+
+func (u Utilities) IsRabbitmqConnEnabled() bool {
+	prefix := u.getActiveEnvPrefix()
+	enabledKey := fmt.Sprintf("%s.rabbitmq.enabled", prefix)
+	return u.GetBooleanConfigValue(enabledKey)
+}
+
 /*
 	Private methods
 */

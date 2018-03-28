@@ -3,4 +3,9 @@ host = "8081"
 
     [docker.rabbitmq]
     host = "rabbitmq"
+    pass = "guest"
+    user = "guest"
     enabled = true
+
+
+    
