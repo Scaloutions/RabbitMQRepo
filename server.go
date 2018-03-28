@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"./app/src/controller"
+	"./app/src/service"
 	"github.com/gin-gonic/gin"
 )
 
 func testing(c *gin.Context) {
-	fmt.Println("Hello World")
+	generalService := service.GetGeneralService()
+	quote := generalService.ProcessRequestBody(c)
+	log.Println(*quote)
 }
 
 func getMainEngine() (*gin.Engine, string) {
@@ -17,7 +21,8 @@ func getMainEngine() (*gin.Engine, string) {
 	u := configController.GetUtilites()
 	api := router.Group(u.GetStringConfigValue("api.api"))
 	{
-		api.GET("/testing", testing)
+		// api.GET("/testing", testing)
+		api.POST("/testing", testing)
 	}
 
 	portStr := fmt.Sprintf(":%d", u.GetIntConfigValue("general.port"))

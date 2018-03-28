@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -19,6 +20,27 @@ func NewUtilites(v *viper.Viper) *Utilities {
 	// will have another function to set up Redis pool
 	return &Utilities{v}
 }
+
+func SerializeObject(i interface{}) []byte {
+
+	serrialized, err := json.Marshal(i)
+	if err != nil {
+		return nil // TODO: add error handling later
+	}
+	return serrialized
+}
+
+func UnserializeObject(data []byte, i interface{}) {
+
+	err := json.Unmarshal(data, i)
+	if err != nil {
+		// TODO: add error handling later
+	}
+}
+
+/*
+	Utility methods
+*/
 
 func (u Utilities) GetIntConfigValue(key string) int {
 	return u.v.GetInt(key)
