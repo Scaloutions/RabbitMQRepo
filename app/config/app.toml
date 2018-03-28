@@ -4,6 +4,7 @@ active = 0
 #   1: docker
 #   2: production
 #   3: qa
+host = 8081
 
     [general.rabbitmq]
     port = 5672

@@ -1,1 +1,6 @@
 [qa]
+host = "8081"
+
+    [qa.rabbitmq]
+    host = "rabbitmq"
+    enabled = true

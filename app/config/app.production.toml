@@ -1,1 +1,6 @@
 [production]
+host = "8081"
+
+    [production.rabbitmq]
+    host = "rabbitmq"
+    enabled = true

@@ -1,4 +1,5 @@
 [docker]
+host = "8081"
 
     [docker.rabbitmq]
     host = "rabbitmq"
