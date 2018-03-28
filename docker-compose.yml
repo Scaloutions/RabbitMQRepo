@@ -1,22 +1,21 @@
 version: '3.4'
 
 services:
-  rabbitMq:
+  rabbitmq:
     container_name: rabbitMq
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "5671:5671"
     environment: 
-      RABBITMQ_DEFAULT_PASS: pass
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_VHOST: vhost
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: guest
   rabbitmq-client:
       build: .
       ports:
         - "8081:8081"
       depends_on:
-        - rabbitMq
+        - rabbitmq
       links:
-        - rabbitMq
+        - rabbitmq
   

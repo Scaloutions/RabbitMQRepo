@@ -33,7 +33,7 @@ func ReadInConfig() *viper.Viper {
 
 func RabbitmqConnect() {
 	time.Sleep(1 * time.Minute)
-	connection, err := amqp.Dial("amqp://user:pass@rabbitMq:5672/vhost")
+	connection, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672")
 	if err != nil {
 		fmt.Errorf("Dial: %s", err)
 	}
