@@ -67,6 +67,31 @@ func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
 	return &queue
 }
 
+func (configService ConfigService) GetSpecificQueue(index int) *amqp.Queue {
+
+	channel := configService.GetRabbitmqChannel()
+	if channel == nil {
+		return nil // TODO: add error handling later
+	}
+
+	queueConfig := configService.u.GetSpecificQueueConfig(index)
+
+	queue, err1 := channel.QueueDeclare(
+		queueConfig.Name,
+		queueConfig.Durable,
+		queueConfig.AutoDelete,
+		queueConfig.Exclusive,
+		queueConfig.NoWait,
+		nil,
+	)
+
+	if err1 != nil {
+		return nil
+	}
+
+	return &queue
+}
+
 func (configService ConfigService) CreateProducer(
 	queue *amqp.Queue) *producer.Producer {
 

@@ -111,19 +111,19 @@ func (u Utilities) GetSpecificQueueName(index int) string {
 }
 
 func (u Utilities) GetQueueDurable() bool {
-	return u.GetBooleanConfigValue("general.rabbitmq.queue.durable")
+	return u.GetBooleanConfigValue("queue.durable")
 }
 
 func (u Utilities) GetQueueAutoDelete() bool {
-	return u.GetBooleanConfigValue("general.rabbitmq.queue.auto_delete")
+	return u.GetBooleanConfigValue("queue.auto_delete")
 }
 
 func (u Utilities) GetQueueExclusive() bool {
-	return u.GetBooleanConfigValue("general.rabbitmq.queue.exclusive")
+	return u.GetBooleanConfigValue("queue.exclusive")
 }
 
 func (u Utilities) GetQueueNoWait() bool {
-	return u.GetBooleanConfigValue("general.rabbitmq.queue.no_wait")
+	return u.GetBooleanConfigValue("queue.no_wait")
 }
 
 func (u Utilities) GetQueueConfig() *data.QueueConfig {

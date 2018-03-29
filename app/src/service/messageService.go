@@ -9,12 +9,11 @@ import (
 
 type (
 	MessageService struct {
-		queue *amqp.Queue
 	}
 )
 
-func GetMessageService(q *amqp.Queue) *MessageService {
-	return newMessageService(q)
+func GetMessageService() *MessageService {
+	return newMessageService()
 }
 
 func (messageService MessageService) PublishMessage(
@@ -50,7 +49,7 @@ func (messageService MessageService) ConsumeMessage(
 	Private methods
 */
 
-func newMessageService(q *amqp.Queue) *MessageService {
+func newMessageService() *MessageService {
 
-	return &MessageService{q}
+	return &MessageService{}
 }

@@ -16,4 +16,16 @@ type (
 		Timestamp int64
 		UserID    string
 	}
+
+	RequestBody struct {
+		QuoteObj    Quote
+		RequestType int
+
+		/*
+			available values for requestType:
+			- 0: save
+			- 1: get-by-key
+			- 2: get
+		*/
+	}
 )

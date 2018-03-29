@@ -4,6 +4,9 @@ import (
 	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
+
+	"../data"
+	"../util"
 )
 
 type (
@@ -16,14 +19,17 @@ func GetGeneralService() *GeneralService {
 }
 
 func (generalService GeneralService) ProcessRequestBody(
-	c *gin.Context) []byte {
+	c *gin.Context) *data.RequestBody {
 
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		return nil
 	}
 
-	return body
+	var reqBody *data.RequestBody
+	util.UnserializeObject(body, &reqBody)
+
+	return reqBody
 }
 
 /*

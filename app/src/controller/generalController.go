@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"../producer"
 	"../service"
+	"../util"
 	"github.com/gin-gonic/gin"
-	"github.com/streadway/amqp"
 )
 
 type (
@@ -11,7 +12,6 @@ type (
 		generalService *service.GeneralService
 		configService  *service.ConfigService
 		messageService *service.MessageService
-		queue          *amqp.Queue
 	}
 )
 
@@ -22,11 +22,12 @@ func GetGeneralController() *GeneralController {
 func (gController GeneralController) PublishMessage(c *gin.Context) {
 
 	// get object from request
-	body := gController.generalService.ProcessRequestBody(c)
+	reqBody := gController.generalService.ProcessRequestBody(c)
+	requestType := reqBody.RequestType
+	body := util.SerializeObject(reqBody.QuoteObj)
 
-	// publish message object in the queue
-	producer := gController.configService.CreateProducer(
-		gController.queue)
+	// // publish message object in the queue
+	producer := gController.createProducerWithSpecifiedQueue(requestType)
 	channel := gController.configService.GetRabbitmqChannel()
 	ch := gController.messageService.PublishMessage(
 		body, channel, producer)
@@ -37,12 +38,20 @@ func (gController GeneralController) PublishMessage(c *gin.Context) {
 	Private methods
 */
 
+func (gController GeneralController) createProducerWithSpecifiedQueue(
+	index int) *producer.Producer {
+
+	queue := gController.configService.GetSpecificQueue(index)
+	producer := gController.configService.CreateProducer(queue)
+
+	return producer
+}
+
 func newGeneralController() *GeneralController {
 
 	gService := service.GetGeneralService()
 	cService := service.GetConfigService()
-	queue := cService.GetRabbitmqQueue()
-	mService := service.GetMessageService(queue)
+	mService := service.GetMessageService()
 
-	return &GeneralController{gService, cService, mService, queue}
+	return &GeneralController{gService, cService, mService}
 }
