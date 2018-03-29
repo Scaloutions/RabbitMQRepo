@@ -105,6 +105,11 @@ func (u Utilities) GetQueueName() string {
 	return u.GetStringConfigValue("general.rabbitmq.queue.name")
 }
 
+func (u Utilities) GetSpecificQueueName(index int) string {
+	qNKey := fmt.Sprintf("%s.name", u.getQueueNameKey(index))
+	return u.GetStringConfigValue(qNKey)
+}
+
 func (u Utilities) GetQueueDurable() bool {
 	return u.GetBooleanConfigValue("general.rabbitmq.queue.durable")
 }
@@ -132,9 +137,42 @@ func (u Utilities) GetQueueConfig() *data.QueueConfig {
 	}
 }
 
+func (u Utilities) GetSpecificQueueConfig(index int) *data.QueueConfig {
+
+	return &data.QueueConfig{
+		u.GetSpecificQueueName(index),
+		u.GetQueueDurable(),
+		u.GetQueueAutoDelete(),
+		u.GetQueueExclusive(),
+		u.GetQueueNoWait(),
+	}
+}
+
 /*
 	Private methods
 */
+
+func (u Utilities) getQueueNameKey(index int) string {
+
+	qMap := u.GetMapArrConfigValue("queue-map")
+
+	var queueName string
+
+	switch index {
+	case toIntFromInt64Inteface(qMap[0]["index"]):
+		queueName = qMap[0]["type"].(string)
+	case toIntFromInt64Inteface(qMap[1]["index"]):
+		queueName = qMap[1]["type"].(string)
+	case toIntFromInt64Inteface(qMap[2]["index"]):
+		queueName = qMap[2]["type"].(string)
+	default:
+		queueName = ""
+	}
+
+	key := fmt.Sprintf("queue.%s", queueName)
+
+	return key
+}
 
 func (u Utilities) getActiveEnvPrefix() string {
 	env := u.GetActiveEnv()

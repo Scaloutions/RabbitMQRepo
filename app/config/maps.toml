@@ -13,3 +13,16 @@ type = "production"
 [[env-map]]
 index = 3
 type = "qa"
+
+
+[[queue-map]]
+index = 0
+type = "save"
+
+[[queue-map]]
+index = 1
+type = "get-by-key"
+
+[[queue-map]]
+index = 2
+type = "get"

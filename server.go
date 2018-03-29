@@ -35,6 +35,15 @@ func setUp() {
 	router.Run(portStr)
 }
 
+func test() {
+	configController := controller.GetConfigController()
+	u := configController.GetUtilites()
+	qConfig := u.GetSpecificQueueConfig(0)
+	fmt.Println(*qConfig)
+}
+
 func main() {
-	setUp()
+	//setUp()
+
+	test()
 }
