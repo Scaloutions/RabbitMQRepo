@@ -7,5 +7,7 @@ host = "8081"
     user = "guest"
     enabled = true
 
+    [docker.cache-server]
+    enabled = true
 
     

@@ -16,8 +16,18 @@ port = 8081
         auto_delete = false # delete when unused
         exclusive = false # exclusive
         no_wait = false # no-wait (wait time for processing)
+    
+    [general.cache-server]
+    port = 8080
+    host = "localhost"
 
 
 [api]
 api = "/api"
 publish = "/publish"
+
+    [api.cache-server]
+    api = "/api"
+    save = "/save"
+    get_by_key = "/get/:stock/:userid"
+    get = "/get"
