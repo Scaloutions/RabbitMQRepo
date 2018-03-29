@@ -1,6 +1,10 @@
 package consumer
 
-import "github.com/streadway/amqp"
+import (
+	"log"
+
+	"github.com/streadway/amqp"
+)
 
 type (
 	Consumer struct {
@@ -10,4 +14,33 @@ type (
 
 func NewConsumer(q *amqp.Queue) *Consumer {
 	return &Consumer{q}
+}
+
+func (consumer Consumer) Consume(channel *amqp.Channel) {
+
+	msgs, err := channel.Consume(
+		consumer.queue.Name,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return
+	}
+
+	forever := make(chan bool)
+
+	go func() {
+		for d := range msgs {
+			log.Printf("Received a message: %s", d.Body)
+		}
+	}()
+
+	// TODO: externalize message later
+	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	<-forever
+
 }
