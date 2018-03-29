@@ -5,24 +5,24 @@ import (
 	"log"
 
 	"./app/src/controller"
-	"./app/src/service"
 	"github.com/gin-gonic/gin"
 )
 
 func testing(c *gin.Context) {
-	generalService := service.GetGeneralService()
-	quote := generalService.ProcessRequestBody(c)
-	log.Println(*quote)
+	log.Println("Hello World")
 }
 
 func getMainEngine() (*gin.Engine, string) {
 	router := gin.Default()
 	configController := controller.GetConfigController()
+	generalController := controller.GetGeneralController()
 	u := configController.GetUtilites()
 	api := router.Group(u.GetStringConfigValue("api.api"))
 	{
-		// api.GET("/testing", testing)
 		api.POST("/testing", testing)
+		api.POST(
+			u.GetStringConfigValue("api.publish"),
+			generalController.PublishMessage)
 	}
 
 	portStr := fmt.Sprintf(":%d", u.GetIntConfigValue("general.port"))

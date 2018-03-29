@@ -6,6 +6,8 @@ import (
 	"github.com/streadway/amqp"
 
 	"../config"
+	"../consumer"
+	"../producer"
 	"../util"
 )
 
@@ -63,6 +65,18 @@ func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
 	}
 
 	return &queue
+}
+
+func (configService ConfigService) CreateProducer(
+	queue *amqp.Queue) *producer.Producer {
+
+	return producer.NewProducer(queue)
+}
+
+func (configService ConfigService) CreateConsumer(
+	queue *amqp.Queue) *consumer.Consumer {
+
+	return consumer.NewConsumer(queue)
 }
 
 /*
