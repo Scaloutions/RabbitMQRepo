@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"github.com/streadway/amqp"
+
+	"./helper"
 )
 
 type (
@@ -36,6 +38,10 @@ func (consumer Consumer) Consume(channel *amqp.Channel) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			quote := helper.GetQuote(d.Body)
+			log.Println("Quote: ", quote)
+
+			// send quote to the cache server
 		}
 	}()
 
