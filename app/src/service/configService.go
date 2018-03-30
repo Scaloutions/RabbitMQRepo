@@ -13,9 +13,14 @@ import (
 
 type (
 	ConfigService struct {
-		u    *util.Utilities
-		conn *amqp.Connection
+		u            *util.Utilities
+		conn         *amqp.Connection
+		consumerConn *amqp.Connection
 	}
+)
+
+const (
+	localHost = "localhost"
 )
 
 func GetConfigService() *ConfigService {
@@ -33,7 +38,23 @@ func (configService ConfigService) GetRabbitmqChannel() *amqp.Channel {
 		return nil // TODO: add warning later
 	}
 
-	channel, err := configService.conn.Channel()
+	channel, err := conn.Channel()
+
+	// TODO: add error handling later
+	if err != nil {
+		return nil
+	}
+	return channel
+}
+
+func (configService ConfigService) GetRabbitmqChannelForConsumer() *amqp.Channel {
+
+	cConn := configService.consumerConn
+	if cConn == nil { // when Rabbitmq is disabled
+		return nil // TODO: add warning later
+	}
+
+	channel, err := cConn.Channel()
 
 	// TODO: add error handling later
 	if err != nil {
@@ -70,6 +91,20 @@ func (configService ConfigService) GetRabbitmqQueue() *amqp.Queue {
 func (configService ConfigService) GetSpecificQueue(index int) *amqp.Queue {
 
 	channel := configService.GetRabbitmqChannel()
+	queue := configService.getSpecificQueueHelper(channel, index)
+	return queue
+}
+
+func (configService ConfigService) GetSpecificQueueForConsumer(
+	index int) *amqp.Queue {
+
+	channel := configService.GetRabbitmqChannelForConsumer()
+	queue := configService.getSpecificQueueHelper(channel, index)
+	return queue
+}
+
+func (configService ConfigService) getSpecificQueueHelper(channel *amqp.Channel, index int) *amqp.Queue {
+
 	if channel == nil {
 		return nil // TODO: add error handling later
 	}
@@ -90,6 +125,7 @@ func (configService ConfigService) GetSpecificQueue(index int) *amqp.Queue {
 	}
 
 	return &queue
+
 }
 
 func (configService ConfigService) CreateProducer(
@@ -111,11 +147,12 @@ func (configService ConfigService) CreateConsumer(
 func newConfigService() *ConfigService {
 	v := config.ReadInConfig()
 	u := util.NewUtilites(v)
-	conn := getRabbitmqConn(u)
-	return &ConfigService{u, conn}
+	conn := getRabbitmqConn(u, 0)
+	cConn := getRabbitmqConn(u, 1)
+	return &ConfigService{u, conn, cConn}
 }
 
-func getRabbitmqConn(u *util.Utilities) *amqp.Connection {
+func getRabbitmqConn(u *util.Utilities, typeConn int) *amqp.Connection {
 
 	if !u.IsRabbitmqConnEnabled() {
 		//	TODO: add warning later
@@ -123,7 +160,13 @@ func getRabbitmqConn(u *util.Utilities) *amqp.Connection {
 		return nil
 	}
 
-	host := u.GetRabbitmqHost()
+	var host string
+	if typeConn == 0 { // connection for producer
+		host = u.GetRabbitmqHost()
+	} else { // connection for consumer
+		host = localHost
+	}
+
 	port := u.GetRabbitmqPort()
 	connType := u.GetRabbitmqConnType()
 	pass := u.GetRabbitmqPass()

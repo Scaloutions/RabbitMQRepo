@@ -8,6 +8,8 @@ import (
 	"../app/src/config"
 	"../app/src/consumer"
 	"../app/src/util"
+
+	"./worker"
 )
 
 const (
@@ -70,8 +72,7 @@ func createQueue(ch *amqp.Channel) *amqp.Queue {
 	return &queue
 }
 
-func main() {
-
+func mainHelper() {
 	conn := createConnection()
 	if conn == nil {
 		log.Fatalln(conn)
@@ -92,5 +93,18 @@ func main() {
 	}()
 
 	<-c
+
+}
+
+func main() {
+
+	// saveWorker := worker.GetSaveWorker()
+	// saveWorker.ConsumeMessage()
+
+	getByKeyWorker := worker.GetGetByKeyWorker()
+	getByKeyWorker.ConsumeMessage()
+
+	// getWorker := worker.GetGetWorker()
+	// go getWorker.ConsumeMessage()
 
 }
