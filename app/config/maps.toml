@@ -13,3 +13,19 @@ type = "production"
 [[env-map]]
 index = 3
 type = "qa"
+
+
+[[req-map]]
+index = 0
+type = "save"
+uri = "/save"
+
+[[req-map]]
+index = 1
+type = "get-by-key"
+uri = "/get-by-key"
+
+[[req-map]]
+index = 2
+type = "get"
+uri = "/get"

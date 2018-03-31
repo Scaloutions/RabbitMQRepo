@@ -1,8 +1,11 @@
 package util
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 
 	"github.com/spf13/viper"
@@ -132,9 +135,66 @@ func (u Utilities) GetQueueConfig() *data.QueueConfig {
 	}
 }
 
+func (u Utilities) GetAuditURL(index int) string {
+
+	uri := u.getUri(index)
+	api := u.GetStringConfigValue("api.cache-server.api")
+	host := u.GetStringConfigValue("general.cache-server.host")
+	port := u.GetStringConfigValue("general.cache-server.port")
+
+	return fmt.Sprintf("http://%s:%s%s%s", host, port, api, uri)
+}
+
+func (u Utilities) SendPostRequest(jsonStr []byte, index int) <-chan int {
+
+	url := u.GetAuditURL(index)
+
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+
+	c := make(chan int)
+
+	go func() {
+
+		resp, err := client.Do(req)
+		if err != nil {
+			// TODO: add error handling later
+			fmt.Println("Error: ", err)
+		}
+		defer resp.Body.Close()
+		fmt.Println("response Status:", resp.Status)
+		fmt.Println("response Headers:", resp.Header)
+		// TODO: add error handling later
+		body, _ := ioutil.ReadAll(resp.Body)
+		fmt.Println(string(body))
+		c <- 0
+	}()
+
+	return c
+
+}
+
 /*
 	Private methods
 */
+
+func (u Utilities) getUri(index int) string {
+
+	rMap := u.GetMapArrConfigValue("req-map")
+
+	switch index {
+	case toIntFromInt64Inteface(rMap[0]["index"]):
+		return rMap[0]["uri"].(string)
+	case toIntFromInt64Inteface(rMap[1]["index"]):
+		return rMap[1]["uri"].(string)
+	case toIntFromInt64Inteface(rMap[2]["index"]):
+		return rMap[2]["uri"].(string)
+	default:
+		return ""
+	}
+
+}
 
 func (u Utilities) getActiveEnvPrefix() string {
 	env := u.GetActiveEnv()

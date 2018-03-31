@@ -6,6 +6,10 @@ active = 1
 #   3: qa
 port = 8081
 
+    [general.cache-server]
+    port = 8080
+    host = "localhost"
+
     [general.rabbitmq]
     port = 5672
     connection_type = "amqp"
@@ -21,3 +25,6 @@ port = 8081
 [api]
 api = "/api"
 publish = "/publish"
+
+    [api.cache-server]
+    api = "/api"
